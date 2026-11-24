@@ -20,7 +20,7 @@ type Photo = { w: number; h: number; pos: readonly [number, number]; faces: { fi
 
 /** Natural size, object-position (fractions) and face anchors (natural px) per hero photo. */
 const PHOTOS: Record<'steps' | 'beach', Photo> = {
-  steps: { w: 1200, h: 1800, pos: [0.5, 0.52], faces: FACES },
+  steps: { w: 1600, h: 2295, pos: [0.5, 0.52], faces: FACES },
   beach: { w: 1800, h: 1200, pos: [0.5, 0.9], faces: { second: [895, 645, -30, -60], first: [1055, 695, 30, -50] } },
 };
 

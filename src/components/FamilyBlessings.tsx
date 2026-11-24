@@ -8,7 +8,7 @@ type Card = { id: string; title: string; text: string; from: string; img: ImgKey
 
 /** Photos cycled across guest wishes so neighbouring cards look different. */
 const GUEST_IMGS: { img: ImgKey; pos: string }[] = [
-  { img: 'steps', pos: '50% 50%' },
+  { img: 'hands', pos: '50% 35%' },
   { img: 'embrace', pos: '50% 40%' },
   { img: 'beach', pos: '50% 62%' },
   { img: 'wwalk', pos: '50% 50%' },
