@@ -85,9 +85,9 @@ export type FamilyBlessing = { title: string; text: string; from: string; img: I
 export const FAMILY_BLESSINGS: FamilyBlessing[] = [
   { title: 'May your home be full of peace', text: 'May God fill your home with peace, your table with laughter, and your hearts with patience for each other.', from: 'Vinu’s parents', img: 'treehead', pos: '50% 30%' },
   { title: 'Welcome to our family', text: 'We prayed for the right person to walk beside our daughter. Vinu, we are so glad it is you.', from: 'Anagha’s parents', img: 'wlead', pos: '50% 35%' },
-  { title: 'Love that grows', text: 'Love the way we did, a little more every year, through every season God gives you.', from: 'Your grandparents', img: 'vkiss', pos: '50% 68%' },
-  { title: 'Keep Christ at the centre', text: 'Let Him be the third strand in your cord. Pray together, forgive quickly, and nothing will break what you build.', from: 'Your godparents', img: 'vwalk', pos: '50% 60%' },
-  { title: 'Always in your corner', text: 'We’ve teased you both for years. Now we get to cheer for you, forever.', from: 'Your brothers & sisters', img: 'window', pos: '50% 45%' },
+  { title: 'Love that grows', text: 'Love the way we did, a little more every year, through every season God gives you.', from: 'Grandparents', img: 'vkiss', pos: '50% 68%' },
+  { title: 'Keep Christ at the centre', text: 'Let Him be the third strand in your cord. Pray together, forgive quickly, and nothing will break what you build.', from: 'Godparents', img: 'vwalk', pos: '50% 60%' },
+  { title: 'Always in your corner', text: 'We’ve teased you both for years. Now we get to cheer for you, forever.', from: 'Brothers & sisters', img: 'window', pos: '50% 45%' },
 ];
 
 export const NAV_LINKS = [
