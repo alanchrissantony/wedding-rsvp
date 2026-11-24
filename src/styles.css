@@ -68,6 +68,7 @@ section[id], footer { scroll-margin-top: 72px; }
 
 /* ---------- hero ---------- */
 .hero { --hero-base: calc(clamp(48px, 7vw, 96px) + clamp(12px, 1.6vw, 22px)); position: relative; height: clamp(600px, 94svh, 880px); background: var(--navy); color: var(--on-dark); overflow: hidden; }
+.hero picture { display: contents; }
 .hero__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 52%; }
 .hero::before { content: ""; position: absolute; inset: 0; z-index: 1; background:
   linear-gradient(180deg, rgba(14,12,30,.55) 0%, rgba(14,12,30,0) 22%),

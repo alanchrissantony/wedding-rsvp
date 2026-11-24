@@ -11,6 +11,19 @@ type Props = {
 
 const SEEN_KEY = 'dateSeen';
 
+/** Large landscape screens get the landscape beach photo: the portrait one would be
+    upscaled ~1.6x to cover a 1920px-wide hero and look soft. */
+const WIDE = '(min-width: 1024px) and (orientation: landscape)';
+
+type Face = readonly [x: number, y: number, dx: number, dy: number];
+type Photo = { w: number; h: number; pos: readonly [number, number]; faces: { first: Face; second: Face } };
+
+/** Natural size, object-position (fractions) and face anchors (natural px) per hero photo. */
+const PHOTOS: Record<'steps' | 'beach', Photo> = {
+  steps: { w: 1200, h: 1800, pos: [0.5, 0.52], faces: FACES },
+  beach: { w: 1800, h: 1200, pos: [0.5, 0.9], faces: { second: [895, 645, -30, -60], first: [1055, 695, 30, -50] } },
+};
+
 function readSeen() {
   try {
     return localStorage.getItem(SEEN_KEY) === '1';
@@ -30,31 +43,34 @@ export function Hero({ heroRef, onOpenMenu, onOpenDate }: Props) {
     const hero = heroRef.current;
     const img = imgRef.current;
     if (!hero || !img) return;
+    const wide = window.matchMedia(WIDE);
     const place = () => {
+      const { w, h, pos, faces } = wide.matches ? PHOTOS.beach : PHOTOS.steps;
+      img.style.objectPosition = `${pos[0] * 100}% ${pos[1] * 100}%`;
       const W = hero.clientWidth;
       const H = hero.clientHeight;
-      const w = img.naturalWidth || 1200;
-      const h = img.naturalHeight || 1800;
       const s = Math.max(W / w, H / h);
-      const ox = (W - w * s) * 0.5;
-      const oy = (H - h * s) * 0.52;
+      const ox = (W - w * s) * pos[0];
+      const oy = (H - h * s) * pos[1];
       const k = Math.min(1, W / 900);
       const pairs = [
-        [firstRef.current, FACES.first],
-        [secondRef.current, FACES.second],
+        [firstRef.current, faces.first],
+        [secondRef.current, faces.second],
       ] as const;
       for (const [el, [x, y, dx, dy]] of pairs) {
         if (!el) continue;
-        el.style.left = `${ox + x * (w / 1200) * s + dx * k}px`;
-        el.style.top = `${oy + y * (h / 1800) * s + dy * k}px`;
+        el.style.left = `${ox + x * s + dx * k}px`;
+        el.style.top = `${oy + y * s + dy * k}px`;
       }
     };
     place();
     img.addEventListener('load', place);
     window.addEventListener('resize', place);
+    wide.addEventListener('change', place);
     return () => {
       img.removeEventListener('load', place);
       window.removeEventListener('resize', place);
+      wide.removeEventListener('change', place);
     };
   }, [heroRef]);
 
@@ -74,12 +90,15 @@ export function Hero({ heroRef, onOpenMenu, onOpenDate }: Props) {
 
   return (
     <header className="hero" id="top" ref={heroRef}>
-      <img
-        className="hero__img"
-        ref={imgRef}
-        src={IMG.steps}
-        alt={`${COUPLE.first} and ${COUPLE.second} seated together on the steps`}
-      />
+      <picture>
+        <source media={WIDE} srcSet={IMG.beach} />
+        <img
+          className="hero__img"
+          ref={imgRef}
+          src={IMG.steps}
+          alt={`${COUPLE.first} and ${COUPLE.second} together`}
+        />
+      </picture>
       <nav className="nav" aria-label="Main">
         <div className="wrap">
           <a className="nav__brand" href="#top">
