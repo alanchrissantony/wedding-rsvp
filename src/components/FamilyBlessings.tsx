@@ -8,12 +8,12 @@ type Card = { id: string; title: string; text: string; from: string; img: ImgKey
 
 /** Photos cycled across guest wishes so neighbouring cards look different. */
 const GUEST_IMGS: { img: ImgKey; pos: string }[] = [
-  { img: 'sofa', pos: '50% 45%' },
-  { img: 'backtoback', pos: '50% 50%' },
-  { img: 'windowseat', pos: '50% 60%' },
-  { img: 'laugh', pos: '50% 45%' },
-  { img: 'sky', pos: '50% 65%' },
-  { img: 'courtyard', pos: '50% 50%' },
+  { img: 'steps', pos: '50% 50%' },
+  { img: 'embrace', pos: '50% 40%' },
+  { img: 'beach', pos: '50% 62%' },
+  { img: 'wwalk', pos: '50% 50%' },
+  { img: 'treehead', pos: '50% 30%' },
+  { img: 'wlead', pos: '50% 35%' },
 ];
 
 const toCard = (w: StoredWish, n: number): Card => ({

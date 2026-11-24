@@ -144,7 +144,7 @@ export function Vows() {
             </div>
           </div>
           <Roll pos="bot" />
-          <img loading="lazy" decoding="async" className="bow" src={bow} alt="" aria-hidden="true" />
+          <img className="bow" src={bow} alt="" aria-hidden="true" />
           <div className="vowsec__hint" aria-hidden="true">
             <svg viewBox="0 0 14 20" fill="none" stroke="currentColor" strokeWidth="1.2">
               <rect x="1" y="1" width="12" height="18" rx="6" />

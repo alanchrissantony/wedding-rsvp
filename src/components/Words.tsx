@@ -51,7 +51,7 @@ export function Words() {
         <div className="track" ref={trackRef} tabIndex={0} aria-label="In each other’s words" onScroll={sync}>
           {WORDS.map((s) => (
             <article className="scard" key={s.title}>
-              <img loading="lazy" decoding="async" src={IMG[s.img]} alt={s.alt} style={{ objectPosition: s.pos }} />
+              <img src={IMG[s.img]} alt={s.alt} style={{ objectPosition: s.pos }} />
               <h3>{s.title}</h3>
               <p>“{s.text}”</p>
               <p className="scard__sig">— {COUPLE[s.from]}</p>

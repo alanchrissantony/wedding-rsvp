@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { IMG } from '../assets';
 import { COUPLE, EVENT } from '../content';
 import { submitWish, type StoredWish, type Wish } from '../lib/wishes';
@@ -140,18 +140,18 @@ export function Wishes({ onSent }: { onSent: (w: StoredWish) => void }) {
         </div>
         <div className="rsvp__grid">
           <div className="rsvp__aside">
-            <img loading="lazy" decoding="async" src={IMG.sofa} alt="" style={{ objectPosition: '50% 45%' }} />
+            <img loading="lazy" decoding="async" src={IMG.embrace} alt="" style={{ objectPosition: '50% 40%' }} />
             <dl>
-              {[EVENT.ceremony, EVENT.reception].map((e) => (
-                <Fragment key={e.title}>
-                  <dt>{e.title}</dt>
-                  <dd>
-                    {e.dateLong}
-                    <br />
-                    {e.time} · {e.place}, {e.town}
-                  </dd>
-                </Fragment>
-              ))}
+              <dt>Date</dt>
+              <dd>{EVENT.dateLong}</dd>
+              <dt>Ceremony</dt>
+              <dd>
+                {EVENT.ceremony.time} · {EVENT.ceremony.place}
+              </dd>
+              <dt>Reception</dt>
+              <dd>
+                {EVENT.reception.time} · {EVENT.reception.place}
+              </dd>
             </dl>
           </div>
           <div className="card">

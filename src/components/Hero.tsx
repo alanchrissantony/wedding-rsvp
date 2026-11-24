@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from 'react';
 import { IMG, coupleMark } from '../assets';
-import { COUPLE, FACES, HERO_FOCUS } from '../content';
+import { COUPLE, FACES } from '../content';
 import { CalendarHeartIcon } from './icons';
 
 type Props = {
@@ -21,8 +21,8 @@ function readSeen() {
 
 export function Hero({ heroRef, onOpenMenu, onOpenDate }: Props) {
   const imgRef = useRef<HTMLImageElement>(null);
-  const leftRef = useRef<HTMLSpanElement>(null);
-  const rightRef = useRef<HTMLSpanElement>(null);
+  const firstRef = useRef<HTMLSpanElement>(null);
+  const secondRef = useRef<HTMLSpanElement>(null);
   const [shake, setShake] = useState(() => !readSeen());
 
   /* Name labels follow the faces in the cover-cropped photo. */
@@ -36,22 +36,16 @@ export function Hero({ heroRef, onOpenMenu, onOpenDate }: Props) {
       const w = img.naturalWidth || 1200;
       const h = img.naturalHeight || 1800;
       const s = Math.max(W / w, H / h);
-      const ox = (W - w * s) * HERO_FOCUS.x;
-      const oy = (H - h * s) * HERO_FOCUS.y;
+      const ox = (W - w * s) * 0.5;
+      const oy = (H - h * s) * 0.52;
       const k = Math.min(1, W / 900);
       const pairs = [
-        [rightRef.current, FACES.right.at],
-        [leftRef.current, FACES.left.at],
+        [firstRef.current, FACES.first],
+        [secondRef.current, FACES.second],
       ] as const;
-      const pad = 12;
       for (const [el, [x, y, dx, dy]] of pairs) {
         if (!el) continue;
-        let left = ox + x * (w / 1200) * s + dx * k;
-        /* Keep long names on screen: who--r is drawn to the left of `left`, who--l to the right. */
-        const lw = el.offsetWidth;
-        if (el.classList.contains('who--r')) left = Math.max(left, pad + lw);
-        else left = Math.min(left, W - pad - lw);
-        el.style.left = `${left}px`;
+        el.style.left = `${ox + x * (w / 1200) * s + dx * k}px`;
         el.style.top = `${oy + y * (h / 1800) * s + dy * k}px`;
       }
     };
@@ -83,9 +77,8 @@ export function Hero({ heroRef, onOpenMenu, onOpenDate }: Props) {
       <img
         className="hero__img"
         ref={imgRef}
-        src={IMG.courtyard}
-        style={{ objectPosition: `${HERO_FOCUS.x * 100}% ${HERO_FOCUS.y * 100}%` }}
-        alt={`${COUPLE.first} and ${COUPLE.second} reading together in the courtyard`}
+        src={IMG.steps}
+        alt={`${COUPLE.first} and ${COUPLE.second} seated together on the steps`}
       />
       <nav className="nav" aria-label="Main">
         <div className="wrap">
@@ -98,11 +91,11 @@ export function Hero({ heroRef, onOpenMenu, onOpenDate }: Props) {
           </button>
         </div>
       </nav>
-      <span className="who who--r" ref={leftRef}>
-        {COUPLE[FACES.left.who]}
+      <span className="who who--r" ref={secondRef}>
+        {COUPLE.first}
       </span>
-      <span className="who who--l" ref={rightRef}>
-        {COUPLE[FACES.right.who]}
+      <span className="who who--l" ref={firstRef}>
+        {COUPLE.second}
       </span>
       <h1 className="hero__sr">{COUPLE.full} are getting married</h1>
       <p className="tagline">
