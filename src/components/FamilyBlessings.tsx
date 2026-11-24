@@ -38,17 +38,17 @@ export function FamilyBlessings({ guestWishes, focusId }: Props) {
     [guestWishes],
   );
   const N = items.length;
-  const [i, setI] = useState(0);
 
+  /* Track the shown card by id, not index: new wishes arriving while someone reads
+     shift indexes, and the card on screen should stay put. */
+  const [curId, setCurId] = useState(items[0].id);
   useEffect(() => {
-    if (!focusId) return;
-    const at = items.findIndex((c) => c.id === focusId);
-    if (at >= 0) setI(at);
-  }, [focusId, items]);
+    if (focusId) setCurId(focusId);
+  }, [focusId]);
 
-  const cur = Math.min(i, N - 1);
-  const prev = () => setI((v) => (Math.min(v, N - 1) + N - 1) % N);
-  const next = () => setI((v) => (Math.min(v, N - 1) + 1) % N);
+  const cur = Math.max(0, items.findIndex((c) => c.id === curId));
+  const prev = () => setCurId(items[(cur + N - 1) % N].id);
+  const next = () => setCurId(items[(cur + 1) % N].id);
 
   const b = items[cur];
   const p = items[(cur + N - 1) % N];
