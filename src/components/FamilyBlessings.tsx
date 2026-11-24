@@ -1,37 +1,75 @@
-import { useState } from 'react';
-import { IMG } from '../assets';
+import { useEffect, useMemo, useState } from 'react';
+import { IMG, type ImgKey } from '../assets';
 import { FAMILY_BLESSINGS } from '../content';
+import type { StoredWish } from '../lib/wishes';
 import { ChevronLeft, ChevronRight } from './icons';
 
-const ITEMS = FAMILY_BLESSINGS;
-const N = ITEMS.length;
+type Card = { id: string; title: string; text: string; from: string; img: ImgKey; pos: string };
 
-/** Carousel of short blessings from the couple's families. */
-export function FamilyBlessings() {
+/** Photos cycled across guest wishes so neighbouring cards look different. */
+const GUEST_IMGS: { img: ImgKey; pos: string }[] = [
+  { img: 'steps', pos: '50% 50%' },
+  { img: 'embrace', pos: '50% 40%' },
+  { img: 'beach', pos: '50% 62%' },
+  { img: 'wwalk', pos: '50% 50%' },
+  { img: 'treehead', pos: '50% 30%' },
+  { img: 'wlead', pos: '50% 35%' },
+];
+
+const toCard = (w: StoredWish, n: number): Card => ({
+  id: w.id,
+  title: `${w.name.split(/\s+/)[0]}’s wish`,
+  text: w.message,
+  from: w.name,
+  ...GUEST_IMGS[n % GUEST_IMGS.length],
+});
+
+type Props = {
+  /** Guests' wishes, newest first */
+  guestWishes: StoredWish[];
+  /** Id of a wish this visitor just sent; the carousel jumps to it */
+  focusId: string | null;
+};
+
+/** Carousel of blessings: the families' words first, then every guest's wish. */
+export function FamilyBlessings({ guestWishes, focusId }: Props) {
+  const items = useMemo<Card[]>(
+    () => [...FAMILY_BLESSINGS.map((b, n) => ({ ...b, id: `family-${n}` })), ...guestWishes.map(toCard)],
+    [guestWishes],
+  );
+  const N = items.length;
   const [i, setI] = useState(0);
-  const prev = () => setI((v) => (v + N - 1) % N);
-  const next = () => setI((v) => (v + 1) % N);
 
-  const b = ITEMS[i];
-  const p = ITEMS[(i + N - 1) % N];
-  const n = ITEMS[(i + 1) % N];
+  useEffect(() => {
+    if (!focusId) return;
+    const at = items.findIndex((c) => c.id === focusId);
+    if (at >= 0) setI(at);
+  }, [focusId, items]);
+
+  const cur = Math.min(i, N - 1);
+  const prev = () => setI((v) => (Math.min(v, N - 1) + N - 1) % N);
+  const next = () => setI((v) => (Math.min(v, N - 1) + 1) % N);
+
+  const b = items[cur];
+  const p = items[(cur + N - 1) % N];
+  const n = items[(cur + 1) % N];
 
   return (
     <section className="faq" id="families" aria-labelledby="families-h">
       <div className="wrap">
-        <p className="eyebrow">With love</p>
+        <p className="eyebrow">From family &amp; friends</p>
         <h2 className="h2" id="families-h">
           Blessings From Our Families
         </h2>
         <div className="qstage">
           <button className="qside qside--prev" type="button" aria-label={`Previous blessing: ${p.title}`} onClick={prev}>
-            <img src={IMG[p.img]} alt="" style={{ objectPosition: p.pos }} />
+            <img loading="lazy" decoding="async" src={IMG[p.img]} alt="" style={{ objectPosition: p.pos }} />
             <span>{p.title}</span>
           </button>
           <div className="qcard" aria-live="polite">
-            <img src={IMG[b.img]} alt="" style={{ objectPosition: b.pos }} />
+            <img loading="lazy" decoding="async" src={IMG[b.img]} alt="" style={{ objectPosition: b.pos }} />
             {/* key re-mounts the body so the fade animation replays on every change */}
-            <div className="qcard__body fade" key={i}>
+            <div className="qcard__body fade" key={b.id}>
               <span className="qmark" aria-hidden="true">
                 “
               </span>
@@ -41,7 +79,7 @@ export function FamilyBlessings() {
             </div>
           </div>
           <button className="qside qside--next" type="button" aria-label={`Next blessing: ${n.title}`} onClick={next}>
-            <img src={IMG[n.img]} alt="" style={{ objectPosition: n.pos }} />
+            <img loading="lazy" decoding="async" src={IMG[n.img]} alt="" style={{ objectPosition: n.pos }} />
             <span>{n.title}</span>
           </button>
         </div>
@@ -50,7 +88,7 @@ export function FamilyBlessings() {
             <ChevronLeft />
           </button>
           <span className="qcount">
-            {i + 1} / {N}
+            {cur + 1} / {N}
           </span>
           <button className="arrow arrow--fill" type="button" aria-label="Next blessing" onClick={next}>
             <ChevronRight />

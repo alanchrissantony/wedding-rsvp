@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { IMG } from '../assets';
 import { COUPLE, EVENT } from '../content';
-import { submitWish, type Wish } from '../lib/wishes';
+import { submitWish, type StoredWish, type Wish } from '../lib/wishes';
 import { ArrowIcon, CheckIcon } from './icons';
 
 type Errors = { name?: boolean; message?: boolean };
 
-function WishForm({ onDone }: { onDone: (w: Wish) => void }) {
+function WishForm({ onDone }: { onDone: (w: StoredWish) => void }) {
   const [w, setW] = useState<Wish>({ name: '', message: '' });
   const [errors, setErrors] = useState<Errors>({});
   const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
   const msgRef = useRef<HTMLTextAreaElement>(null);
 
@@ -27,8 +28,13 @@ function WishForm({ onDone }: { onDone: (w: Wish) => void }) {
     if (bad.message) return msgRef.current?.focus();
 
     setSending(true);
-    await submitWish(wish);
-    onDone(wish);
+    setFailed(false);
+    try {
+      onDone(await submitWish(wish));
+    } catch {
+      setFailed(true);
+      setSending(false);
+    }
   };
 
   const fieldCls = (k: keyof Errors) => `field${errors[k] ? ' bad' : ''}`;
@@ -71,6 +77,11 @@ function WishForm({ onDone }: { onDone: (w: Wish) => void }) {
           Please write a few words.
         </p>
       </div>
+      {failed && (
+        <p className="err" role="alert" style={{ display: 'block' }}>
+          Couldn’t send just now — please try again.
+        </p>
+      )}
       <button className="btn btn--block" type="submit" disabled={sending}>
         {sending ? 'Sending… ' : 'Send Wishes '}
         <ArrowIcon />
@@ -90,10 +101,16 @@ function WishDone({ wish, onAgain }: { wish: Wish; onAgain: () => void }) {
         <CheckIcon />
       </div>
       <h3>Thank You, {first}.</h3>
-      <p>Your wishes will reach {COUPLE.full}. We can’t wait to celebrate with you on {EVENT.dateShort}.</p>
+      <p>
+        Your wishes are now among the blessings for {COUPLE.full}. We can’t wait to celebrate with you on{' '}
+        {EVENT.dateShort}.
+      </p>
       <div className="done__acts">
         <a className="btn btn--ghost" href={EVENT.calendarUrl} target="_blank" rel="noopener">
           Add to calendar <ArrowIcon />
+        </a>
+        <a className="link" href="#families">
+          See it in the blessings ↑
         </a>
         <button className="link" type="button" onClick={onAgain}>
           Send another wish
@@ -103,8 +120,12 @@ function WishDone({ wish, onAgain }: { wish: Wish; onAgain: () => void }) {
   );
 }
 
-export function Wishes() {
+export function Wishes({ onSent }: { onSent: (w: StoredWish) => void }) {
   const [sent, setSent] = useState<Wish | null>(null);
+  const done = (w: StoredWish) => {
+    setSent(w);
+    onSent(w);
+  };
 
   return (
     <section className="rsvp" id="wishes" aria-labelledby="wishes-h">
@@ -119,7 +140,7 @@ export function Wishes() {
         </div>
         <div className="rsvp__grid">
           <div className="rsvp__aside">
-            <img src={IMG.embrace} alt="" style={{ objectPosition: '50% 40%' }} />
+            <img loading="lazy" decoding="async" src={IMG.embrace} alt="" style={{ objectPosition: '50% 40%' }} />
             <dl>
               <dt>Date</dt>
               <dd>{EVENT.dateLong}</dd>
@@ -134,7 +155,7 @@ export function Wishes() {
             </dl>
           </div>
           <div className="card">
-            {sent ? <WishDone wish={sent} onAgain={() => setSent(null)} /> : <WishForm onDone={setSent} />}
+            {sent ? <WishDone wish={sent} onAgain={() => setSent(null)} /> : <WishForm onDone={done} />}
           </div>
         </div>
       </div>
