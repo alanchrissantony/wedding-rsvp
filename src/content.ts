@@ -25,10 +25,10 @@ export const EVENT = {
   calendar: { year: 2026, month: 10, monthName: 'November', weddingDay: 28 },
 };
 
-/** Hero name labels: face position in the 1200×1800 hero photo, plus a px offset. */
+/** Hero name labels: face position in the 1600×2295 hero photo, plus a px offset. */
 export const FACES = {
-  second: [445, 711, -36, -70],
-  first: [553, 747, 40, -58],
+  second: [591, 821, -36, -70],
+  first: [740, 907, 40, -58],
 } as const;
 
 export const VOWS = [
@@ -86,7 +86,7 @@ export const FAMILY_BLESSINGS: FamilyBlessing[] = [
   { title: 'May your home be full of peace', text: 'May God fill your home with peace, your table with laughter, and your hearts with patience for each other.', from: 'Vinu’s parents', img: 'treehead', pos: '50% 30%' },
   { title: 'Welcome to our family', text: 'We prayed for the right person to walk beside our daughter. Vinu, we are so glad it is you.', from: 'Anagha’s parents', img: 'wlead', pos: '50% 35%' },
   { title: 'Love that grows', text: 'Love the way we did, a little more every year, through every season God gives you.', from: 'Grandparents', img: 'vkiss', pos: '50% 68%' },
-  { title: 'Keep Christ at the centre', text: 'Let Him be the third strand in your cord. Pray together, forgive quickly, and nothing will break what you build.', from: 'Godparents', img: 'vwalk', pos: '50% 60%' },
+  { title: 'Keep Christ at the centre', text: 'Let Him be the third strand in your cord. Pray together, forgive quickly, and nothing will break what you build.', from: 'Godparents', img: 'vwalk', pos: '50% 35%' },
   { title: 'Always in your corner', text: 'We’ve teased you both for years. Now we get to cheer for you, forever.', from: 'Brothers & sisters', img: 'window', pos: '50% 45%' },
 ];
 
